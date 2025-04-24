@@ -187,11 +187,8 @@ abstract class CommandsRouter
 			/** @var Command $route */
 			$route = $item["attribute"];
 
-			error_log(PHP_EOL . __LINE__);
-
 			#	Access rights check.
 			if ($this->canAccessByEnvAdmin($route) || $this->canAccessByOwner($route) || $this->canAccessByAdmin($route)) continue;
-			error_log(PHP_EOL . __LINE__);
 
 			#	Check n trim the @NameOfBot.
 			if ($route->botName && !$route->returnData) {
@@ -199,21 +196,15 @@ abstract class CommandsRouter
 				if ($trimName === false) return false;
 				if (is_string($trimName)) $text = $trimName;
 			}
-			error_log(PHP_EOL . __LINE__);
 
 			#	Prepare text.
 			$textParts = $this->normalizeSplit($text, $route->separator);
-			error_log(PHP_EOL . __LINE__);
 
 			#	Process command.
 			$params = array_reduce(
 				$route->commands,
 				function ($carry, $cmd) use ($route, $textParts) {
-					error_log(PHP_EOL . __LINE__);
-
 					if ($carry !== null) return false;
-
-					error_log(PHP_EOL . __LINE__);
 
 					$cmdParts = $this->normalizeSplit($cmd, $route->separator);
 					if (empty($cmdParts) || count($textParts) < count($cmdParts)) return null;
@@ -223,14 +214,12 @@ abstract class CommandsRouter
 					return $route->requireData && empty($params) ? null : $params;
 				}
 			);
-			error_log(PHP_EOL . __LINE__);
 
 			if ($params !== null) {
 				$item["method"]->invokeArgs($controller, []);
 				return true;
 			}
 		}
-		error_log(PHP_EOL . __LINE__);
 
 		return false;
 	}
