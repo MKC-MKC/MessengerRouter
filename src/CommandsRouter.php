@@ -9,6 +9,7 @@ use InvalidArgumentException;
 abstract class CommandsRouter
 {
 	private ?array $attributes;
+	protected array|null $data = null;
 	protected MessengerContractInterface $contractInterface;
 
 	/**
@@ -219,8 +220,10 @@ abstract class CommandsRouter
 				}
 			);
 
+			$this->data = $route->returnData ? array_merge([$text], $params) : null;
+
 			if ($params !== null) {
-				$item["method"]->invokeArgs($controller, []);
+				$item["method"]->invokeArgs($controller, $this->data ? [$this->data] : []);
 				return true;
 			}
 		}
