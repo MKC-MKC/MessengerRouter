@@ -13,7 +13,7 @@ abstract class CommandsRouter
 
 	/**
 	 * @param MessengerContractInterface $controller
-	 * @throws NoRouteException
+	 * @throws NoRouteException|InvalidArgumentException
 	 */
 	public function __construct(MessengerContractInterface $controller)
 	{
