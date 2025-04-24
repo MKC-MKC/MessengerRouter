@@ -187,9 +187,6 @@ abstract class CommandsRouter
 			/** @var Command $route */
 			$route = $item["attribute"];
 
-			error_log(PHP_EOL . (int)$this->canAccessByEnvAdmin($route));
-			error_log(PHP_EOL . (int)$this->canAccessByOwner($route));
-			error_log(PHP_EOL . (int)$this->canAccessByAdmin($route));
 			#	Access rights check.
 			if ($this->canAccessByEnvAdmin($route) || $this->canAccessByOwner($route) || $this->canAccessByAdmin($route)) continue;
 
