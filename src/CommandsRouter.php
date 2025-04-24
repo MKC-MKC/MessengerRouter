@@ -136,7 +136,8 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByEnvAdmin(Command $attribute): bool
 	{
-		return !$attribute->isEnvAdmin || $this->possibleCall("isSenderEnvAdmin");
+		if (!$attribute->isEnvAdmin) return true;
+		return $this->possibleCall("isSenderEnvAdmin");
 	}
 
 	/**
@@ -148,7 +149,8 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByOwner(Command $attribute): bool
 	{
-		return !$attribute->isOwner || $this->possibleCall("isSenderOwner") || $this->canAccessByEnvAdmin($attribute);
+		if (!$attribute->isOwner) return true;
+		return $this->possibleCall("isSenderOwner") || $this->possibleCall("isSenderEnvAdmin");
 	}
 
 	/**
@@ -160,7 +162,10 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByAdmin(Command $attribute): bool
 	{
-		return !$attribute->isAdmin || $this->possibleCall("isSenderAdmin") || $this->canAccessByOwner($attribute);
+		if (!$attribute->isAdmin) return true;
+		return $this->possibleCall("isSenderAdmin")
+			|| $this->possibleCall("isSenderOwner")
+			|| $this->possibleCall("isSenderEnvAdmin");
 	}
 
 	/**
