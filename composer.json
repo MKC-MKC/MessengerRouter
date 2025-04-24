@@ -1,0 +1,32 @@
+{
+    "name": "haikiri/messenger-routing",
+    "description": "MessengerRouting – is a Command Router for messengers, like Telegram and Others",
+    "keywords": [
+        "php",
+        "sdk",
+        "bot",
+        "routing",
+        "messenger"
+    ],
+    "homepage": "https://github.com/MKC-MKC/MessengerRouter",
+    "type": "library",
+    "license": "proprietary",
+    "autoload": {
+        "psr-4": {
+            "Haikiri\\MessengerRouting\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=8.0",
+        "ext-mbstring": "*"
+    },
+    "authors": [
+        {
+            "name": "Haikiri",
+            "email": "haikiri@ya.ru",
+            "homepage": "https://haikiri.t.me"
+        }
+    ]
+}
