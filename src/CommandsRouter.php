@@ -220,9 +220,9 @@ abstract class CommandsRouter
 				}
 			);
 
-			$this->data = $route->returnData ? array_merge([$text], $params) : null;
-
 			if ($params !== null) {
+				if ($route->requireData && empty($params)) continue;
+				$this->data = $route->returnData ? array_merge([$text], $params) : null;
 				$item["method"]->invokeArgs($controller, $this->data ? [$this->data] : []);
 				return true;
 			}
