@@ -188,7 +188,11 @@ abstract class CommandsRouter
 			$route = $item["attribute"];
 
 			#	Access rights check.
-			if ($this->canAccessByEnvAdmin($route) || $this->canAccessByOwner($route) || $this->canAccessByAdmin($route)) continue;
+			if (
+				($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) ||
+				($route->isOwner && !$this->canAccessByOwner($route)) ||
+				($route->isAdmin && !$this->canAccessByAdmin($route))
+			) continue;
 
 			#	Check n trim the @NameOfBot.
 			if ($route->botName && !$route->returnData) {
