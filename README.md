@@ -224,7 +224,7 @@ namespace App\Messenger\Telegram;
 
 use Haikiri\MessengerRouting\Command;
 use Haikiri\MessengerRouting\CommandsRouter;
-use App\Messenger\Controller\TelegramMessenger;
+use App\Messenger\TelegramMessenger;
 
 class PrivateRoom extends CommandsRouter
 {
