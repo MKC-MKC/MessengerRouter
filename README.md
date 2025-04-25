@@ -17,12 +17,6 @@ If you need to make any changes, write to the contact details in `composer.json`
 composer require haikiri/messenger-routing
 ```
 
-Или всегда последняя сборка:
-
-```bash
-composer require haikiri/messenger-routing:dev-main
-```
-
 ---
 
 ## Requirements:
