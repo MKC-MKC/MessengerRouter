@@ -63,12 +63,12 @@ This will not cause an exception if the command is not found. The code will cont
 Это не вызовет исключение, если команда не найдена. Код продолжит работу.
 
 ```php
-	#   This method is optional, and will contain your implementation if no one command is found.
-	protected final function catch_all(): void
-	{
-		echo "Realize this method if you need to handle the event in your own way if more than one command was not found.";
-		echo "For example: send a message that such a command has not been found.";
-	}
+#   This method is optional, and will contain your implementation if no one command is found.
+protected final function catch_all(): void
+{
+	echo "Realize this method if you need to handle the event in your own way if more than one command was not found.";
+	echo "For example: send a message that such a command has not been found.";
+}
 ```
 
 ## Access rights
@@ -105,13 +105,13 @@ First, let's make our entry point. A Webhook will be configured on this page.
 `/src/Controller/ApiController.php`
 
 ```php
-	// This method accepts only POST requests from Telegram.
-	#[Route(path: "/api/telegram/controller", name: "controller_post", methods: ["POST"])]
-	public function controller_post(): Response
-	{
-		(new \App\Messenger\TelegramMessenger())->handleUpdate();
-		return new Response("ok");
-	}
+// This method accepts only POST requests from Telegram.
+#[Route(path: "/api/telegram/controller", name: "controller_post", methods: ["POST"])]
+public function controller_post(): Response
+{
+	(new \App\Messenger\TelegramMessenger())->handleUpdate();
+	return new Response("ok");
+}
 ```
 
 Now let's create a Telegram Messenger class that will process our Telegram requests.
