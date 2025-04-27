@@ -97,10 +97,10 @@ It expected that the list of admin’s IDs will be listed in your project's .ENV
 Structure:
 
 - /src
-    - /Controller – Our web pages (Symfony) are stored here.
+    - /Controller – Your web pages (Symfony) are stored here.
     - /Messenger – Everything related to messengers will be here.
 
-First, let's make our entry point. A Webhook will be configured on this page.
+First, let's make your entry point. A Webhook will be configured on this page.
 
 `/src/Controller/ApiController.php`
 
@@ -114,7 +114,7 @@ public function controller_post(): Response
 }
 ```
 
-Now let's create a Telegram Messenger class that will process our Telegram requests.
+Now let's create a Telegram Messenger class that will process your Telegram requests.
 Connect your Telegram SDK in the constructor. Please, use your real library! This is just an example!
 
 `/src/Messenger/TelegramMessenger.php`
@@ -126,7 +126,7 @@ class TelegramMessenger extends TelegramContract
 
 	public function __construct()
 	{
-		# Our Telegram Api Bots SDK Here: $this->bot
+		# Your Telegram Api Bots SDK Here: $this->bot
 		$this->bot = new \Developer\OF\MyWonderfulTelegramSDK(
 			your_api_server: $_ENV['TELEGRAM_API_HOST'],
 			your_api_token: $_ENV['TELEGRAM_API_TOKEN'],
@@ -152,8 +152,8 @@ class TelegramMessenger extends TelegramContract
 	}
 ```
 
-Write the `extends TelegramContract` and create an abstract class, where we'll write the data for our command handler.
-Connecting our interface from the new library `\Haikiri\MessengerRouting\MessengerContractInterface`:
+Write the `extends TelegramContract` and create an abstract class, where we'll write the data for your command handler.
+Connecting your interface from the new library `\Haikiri\MessengerRouting\MessengerContractInterface`:
 
 `/src/Messenger/TelegramContract.php`
 
@@ -232,7 +232,7 @@ class PrivateRoom extends CommandsRouter
 
 	public function __construct(TelegramMessenger $controller)
 	{
-		$this->messenger = $controller; # using our parent controller for working with telegram sdk
+		$this->messenger = $controller; # using your parent controller for working with telegram sdk
 		parent::__construct($controller); # Always at end
 	}
 
