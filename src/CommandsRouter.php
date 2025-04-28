@@ -4,7 +4,6 @@ namespace Haikiri\MessengerRouting;
 
 use ReflectionClass;
 use ReflectionMethod;
-use InvalidArgumentException;
 
 abstract class CommandsRouter
 {
@@ -14,7 +13,6 @@ abstract class CommandsRouter
 
 	/**
 	 * @param MessengerContractInterface $controller
-	 * @throws NoRouteException|InvalidArgumentException
 	 */
 	public function __construct(MessengerContractInterface $controller)
 	{
@@ -23,11 +21,17 @@ abstract class CommandsRouter
 
 		#	Initialize attributes.
 		$this->attributes = $this->getAttributes($this);
-		if (empty($this->attributes)) throw new NoRouteException("No one command found in your controller");
+		if (empty($this->attributes)) {
+			error_log("No one command found in your controller.");
+			return $this->catch_all() ?? true;
+		}
 
 		#	Check for presence of text.
 		$text = $this->possibleCall("getSenderCallbackQueryData", "getSenderText");
-		if (empty($text)) throw new InvalidArgumentException("No one command source found in your interface");
+		if (empty($text)) {
+			error_log("No one command source found in your interface.");
+			return $this->catch_all() ?? true;
+		}
 
 		#	Process exact matches.
 		$exactResult = $this->exactMatchDispatch($this, $text);

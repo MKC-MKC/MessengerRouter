@@ -42,18 +42,6 @@ composer require haikiri/messenger-routing
 
 ## Errors
 
-Your new command storage can now throw several types of exceptions by default:
-
-- 1: `\InvalidArgumentException`
-
-> In case you did not pass text data for command processing or the method is not implemented.
-
-- 2: `\Haikiri\MessengerRouting\NoRouteException`
-
-> In case no command is implemented in your command handler.
-
----
-
 Please note, if no command has been found, you can catch this discrepancy and implement your behavior.
 By default, your controller will return true.
 This will not cause an exception if the command is not found. The code will continue to work.
