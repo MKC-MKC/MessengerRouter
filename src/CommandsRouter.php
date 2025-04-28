@@ -42,7 +42,7 @@ abstract class CommandsRouter
 	}
 
 	/**
-	 * Redefine this method in your class to handle events when matches is differ.
+	 * Implement this method in your class to handle events when matches is differ.
 	 */
 	protected function catch_all(): void
 	{
