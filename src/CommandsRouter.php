@@ -50,6 +50,8 @@ abstract class CommandsRouter
 	 */
 	protected function catch_all(): void
 	{
+		error_log(__FUNCTION__ . " - No one command found in your controller.");
+		error_log(__FUNCTION__ . " - Implement this method in your class to handle events when matches is differ.");
 	}
 
 	/**
