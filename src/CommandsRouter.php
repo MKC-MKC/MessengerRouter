@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Haikiri\MessengerRouting;
 
 use ReflectionClass;
@@ -16,33 +18,31 @@ abstract class CommandsRouter
 	 */
 	public function __construct(MessengerContractInterface $controller)
 	{
-		#	Interface that is implemented in the controller.
 		$this->contractInterface = $controller;
-
-		#	Initialize attributes.
 		$this->attributes = $this->getAttributes($this);
+	}
+
+	public function __invoke(): void
+	{
 		if (empty($this->attributes)) {
 			error_log("No one command found in your controller.");
-			return $this->catch_all() ?? true;
+			return;
 		}
 
-		#	Check for presence of text.
 		$text = $this->possibleCall("getSenderCallbackQueryData", "getSenderText");
 		if (empty($text)) {
 			error_log("No one command source found in your interface.");
-			return $this->catch_all() ?? true;
+			$this->catch_all();
+			return;
 		}
 
-		#	Process exact matches.
 		$exactResult = $this->exactMatchDispatch($this, $text);
-		if ($exactResult) return true;
+		if ($exactResult) return;
 
-		#	Process fuzzy matches.
 		$fuzzyResult = $this->fuzzyMatchDispatch($this, $text);
-		if ($fuzzyResult) return true;
+		if ($fuzzyResult) return;
 
-		#	Here we process everything if mismatched.
-		return $this->catch_all() ?? true;
+		$this->catch_all();
 	}
 
 	/**

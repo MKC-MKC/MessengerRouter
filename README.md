@@ -128,11 +128,11 @@ class TelegramMessenger extends TelegramContract
 		$messageType = $this->bot->getMessage()->getType();
 		switch ($messageType) {
 			case "private":
-				new Telegram\PrivateRoom($this); # Pass `$this` to your private room for using MessengerContract and Tg API.
+				(new Telegram\PrivateRoom($this))(); # Pass `$this` to your private room for using MessengerContract and Tg API.
 //			case "group":
-//				new Telegram\GroupRoom($this); # Pass `$this` to your private room for using MessengerContract and Tg API.
+//				(new Telegram\GroupRoom($this))(); # Pass `$this` to your private room for using MessengerContract and Tg API.
 //			case "supergroup":
-//				new Telegram\SuperGroupRoom($this); # Pass `$this` to your private room for using MessengerContract and Tg API.
+//				(new Telegram\SuperGroupRoom($this))(); # Pass `$this` to your private room for using MessengerContract and Tg API.
 			default:
 				throw new \Exception("sorry. this chat is not supported: `{$messageType}`");
 		}
