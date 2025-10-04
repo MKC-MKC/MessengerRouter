@@ -5,7 +5,7 @@ namespace Haikiri\MessengerRouting;
 use Attribute;
 
 #[Attribute(Attribute::TARGET_METHOD)]
-class Command
+class OnCommand
 {
 	public array $commands;
 	public bool $returnData;

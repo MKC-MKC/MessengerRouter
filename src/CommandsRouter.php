@@ -77,7 +77,7 @@ abstract class CommandsRouter
 	{
 		$reflection = new ReflectionClass($controller);
 		return array_reduce($reflection->getMethods(), function ($carry, ReflectionMethod $method) {
-			$attrs = $method->getAttributes(Command::class);
+			$attrs = $method->getAttributes(OnCommand::class);
 			if (!empty($attrs)) {
 				$carry[] = [
 					"method" => $method,
@@ -137,10 +137,10 @@ abstract class CommandsRouter
 	 * Method checks the id's of listed admins in your getter.
 	 * Только администраторы окружения смогут выполнять эти команды.
 	 *
-	 * @param Command $attribute
+	 * @param OnCommand $attribute
 	 * @return bool
 	 */
-	private function canAccessByEnvAdmin(Command $attribute): bool
+	private function canAccessByEnvAdmin(OnCommand $attribute): bool
 	{
 		if (!$attribute->isEnvAdmin) return true;
 		return $this->possibleCall("isSenderEnvAdmin");
@@ -150,10 +150,10 @@ abstract class CommandsRouter
 	 * Method checks of the owner rights.
 	 * Только создатель чата или администратор окружения сможет выполнить эти команды.
 	 *
-	 * @param Command $attribute
+	 * @param OnCommand $attribute
 	 * @return bool
 	 */
-	private function canAccessByOwner(Command $attribute): bool
+	private function canAccessByOwner(OnCommand $attribute): bool
 	{
 		if (!$attribute->isOwner) return true;
 		return $this->possibleCall("isSenderOwner") || $this->possibleCall("isSenderEnvAdmin");
@@ -163,10 +163,10 @@ abstract class CommandsRouter
 	 * Method checks of the admin rights.
 	 * Только администратор окружения или чата, сможет выполнить эти команды.
 	 *
-	 * @param Command $attribute
+	 * @param OnCommand $attribute
 	 * @return bool
 	 */
-	private function canAccessByAdmin(Command $attribute): bool
+	private function canAccessByAdmin(OnCommand $attribute): bool
 	{
 		if (!$attribute->isAdmin) return true;
 		return $this->possibleCall("isSenderAdmin")
@@ -196,7 +196,7 @@ abstract class CommandsRouter
 	private function exactMatchDispatch(object $controller, string $text): bool
 	{
 		foreach ($this->attributes as $item) {
-			/** @var Command $route */
+			/** @var OnCommand $route */
 			$route = $item["attribute"];
 
 			#	Access rights check.
@@ -252,7 +252,7 @@ abstract class CommandsRouter
 	private function fuzzyMatchDispatch(object $controller, string $text): bool
 	{
 		foreach ($this->attributes as $item) {
-			/** @var Command $route */
+			/** @var OnCommand $route */
 			$route = $item["attribute"];
 
 			#	If match temperature is 100% or data return is required - skip.

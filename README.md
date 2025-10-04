@@ -210,7 +210,7 @@ declare(strict_types=1);
 
 namespace App\Messenger\Telegram;
 
-use Haikiri\MessengerRouting\Command;
+use Haikiri\MessengerRouting\OnCommand;
 use Haikiri\MessengerRouting\CommandsRouter;
 use App\Messenger\TelegramMessenger;
 
@@ -233,7 +233,7 @@ class PrivateRoom extends CommandsRouter
 		$this->messenger->server->sendMessage(chatId: $chat_id, text: $message);
 	}
 
-	#[Command(commands: "/start")]
+	#[OnCommand(commands: "/start")]
 	public function start()
 	{
 		$this->messenger->bot->sendMessage(
@@ -242,7 +242,7 @@ class PrivateRoom extends CommandsRouter
 		);
 	}
 
-	#[Command(commands: "/stop", isOwner: true)] # Only the chat creator and ENV Admins can stop this bot!
+	#[OnCommand(commands: "/stop", isOwner: true)] # Only the chat creator and ENV Admins can stop this bot!
 	public function start(): void
 	{
 		$this->messenger->bot->sendMessage(
@@ -251,7 +251,7 @@ class PrivateRoom extends CommandsRouter
 		);
 	}
 
-	#[Command(
+	#[OnCommand(
 		commands: [
 			"/balance", "баланс", "сколько денег", "сколько денек", "мой счет", "сколько средств",
 			"сколько денег", "у меня денег", "у меня бабок","остаток денег", "остаток средств",
@@ -271,7 +271,7 @@ class PrivateRoom extends CommandsRouter
 		);
 	}
 
-	#[Command(
+	#[OnCommand(
 		commands: ["ban", "бан"],
 		return_data: true, # temperature not worked if return_data is true.
 		require_data: true, # this method of command will be ignored if there is no data with this flag if true
@@ -284,7 +284,7 @@ class PrivateRoom extends CommandsRouter
 		var_dump($this->data);
 	}
 
-	#[Command(
+	#[OnCommand(
 		commands: "left",
 		isEnvAdmin: true, # only ENV admins can use this command. chat owner, administrators, and others will be ignored
 	)]
