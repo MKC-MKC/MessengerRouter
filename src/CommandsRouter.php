@@ -199,24 +199,24 @@ abstract class CommandsRouter
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
 
-			#	Access rights check.
+			# Access rights check.
 			if (
 				($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) ||
 				($route->isOwner && !$this->canAccessByOwner($route)) ||
 				($route->isAdmin && !$this->canAccessByAdmin($route))
 			) continue;
 
-			#	Check n trim the @NameOfBot.
+			# Check n trim the @NameOfBot.
 			if ($route->botName && !$route->returnData) {
 				$trimName = $this->checkBotName($text);
 				if ($trimName === false) return false;
 				if (is_string($trimName)) $text = $trimName;
 			}
 
-			#	Prepare text.
+			# Prepare text.
 			$textParts = $this->normalizeSplit($text, $route->separator);
 
-			#	Process command.
+			# Process command.
 			$params = array_reduce(
 				$route->commands,
 				function ($carry, $cmd) use ($route, $textParts) {
@@ -255,10 +255,10 @@ abstract class CommandsRouter
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
 
-			#	If match temperature is 100% or data return is required - skip.
+			# If match temperature is 100% or data return is required - skip.
 			if ($route->temperature === 100 || $route->returnData || $route->requireData) continue;
 
-			#	Process command.
+			# Process command.
 			$text = $this->normalizeFuzzyString($text, true);
 			$matched = array_filter($route->commands, function ($command) use ($text, $route) {
 				$cmd = $this->normalizeFuzzyString($command, true);
