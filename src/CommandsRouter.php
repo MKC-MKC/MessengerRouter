@@ -220,7 +220,7 @@ abstract class CommandsRouter
 			$params = array_reduce(
 				$route->commands,
 				function ($carry, $cmd) use ($route, $textParts) {
-					if ($carry !== null) return false;
+					if ($carry !== null) return $carry;
 
 					$cmdParts = $this->normalizeSplit($cmd, $route->separator);
 					if (empty($cmdParts) || count($textParts) < count($cmdParts)) return null;
