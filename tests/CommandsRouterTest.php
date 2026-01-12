@@ -40,10 +40,10 @@ class CommandsRouterTest extends TestCase
 	public function test_ThanksCommand(): void
 	{
 		$this->update["message"]["text"] = "Thank You!";
-		$this->assertTrue(self::process(new Telegram\ThanksCommand(), $this->update));
+		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
 
 		$this->update["message"]["text"] = "Спасибо!";
-		$this->assertTrue(self::process(new Telegram\ThanksCommand(), $this->update));
+		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
 	}
 
 }
