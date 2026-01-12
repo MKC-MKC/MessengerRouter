@@ -8,7 +8,7 @@ use Haikiri\MessengerRouting\CommandsRouter;
 use Haikiri\MessengerRouting\MessengerContractInterface;
 
 /**
- * Implement This Method From `Update` of Your Messenger.
+ * Implement This Class From `Update` Object of Your Messenger.
  * @see https://core.telegram.org/bots/api#update
  */
 class TelegramContract extends CommandsRouter implements MessengerContractInterface
