@@ -37,10 +37,10 @@ abstract class CommandsRouter
 			return;
 		}
 
-		$exactResult = $this->exactMatchDispatch($this, $text);
+		$exactResult = $this->exactMatchHandler($this, $text);
 		if ($exactResult) return;
 
-		$fuzzyResult = $this->fuzzyMatchDispatch($this, $text);
+		$fuzzyResult = $this->fuzzyMatchHandler($this, $text);
 		if ($fuzzyResult) return;
 
 		$this->catch_all();
@@ -120,7 +120,7 @@ abstract class CommandsRouter
 	 * @param string $text
 	 * @return string|false|null
 	 */
-	private function checkBotName(string $text): string|false|null
+	private function prepareBotName(string $text): string|false|null
 	{
 		if (!str_contains($text, "@")) return null;
 
@@ -194,7 +194,7 @@ abstract class CommandsRouter
 	 * @param string $text
 	 * @return bool
 	 */
-	private function exactMatchDispatch(object $controller, string $text): bool
+	private function exactMatchHandler(object $controller, string $text): bool
 	{
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
@@ -209,7 +209,7 @@ abstract class CommandsRouter
 
 			# Check n trim the @NameOfBot.
 			if ($route->botName && !$route->return_data) {
-				$trimName = $this->checkBotName($text);
+				$trimName = $this->prepareBotName($text);
 				if ($trimName === false) return false;
 				if (is_string($trimName)) $text = $trimName;
 			}
@@ -250,7 +250,7 @@ abstract class CommandsRouter
 	 * @param string $text
 	 * @return bool
 	 */
-	private function fuzzyMatchDispatch(object $controller, string $text): bool
+	private function fuzzyMatchHandler(object $controller, string $text): bool
 	{
 		if ($this->commands_debug) error_log("\n\n>> INPUT COMMAND:\n\"$text\"\n");
 
