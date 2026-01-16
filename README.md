@@ -87,7 +87,7 @@ Structure:
     - /Controller – Your web pages (Symfony) are stored here.
     - /Messenger – Everything related to messengers will be here.
 
-First, let's make your entry point. A Webhook will be configured on this page.
+First, let's make your entrypoint. A Webhook will be configured on this page.
 
 `/src/Controller/ApiController.php`
 
