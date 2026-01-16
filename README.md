@@ -30,8 +30,8 @@ composer require haikiri/messenger-routing
 ## Theory, how it works:
 
 - Create a messenger controller
-    - Create an abstract model that implements the interface `\Haikiri\MessengerRouting\MessengerContractInterface`
-    - Fill this model with methods from the interface.
+    - Create a contract that implements the interface `\Haikiri\MessengerRouting\MessengerContractInterface`
+    - Fill this contract with methods from the interface.
     - Check which type of message you will handle, if needed: `["message", "edited_message", ...etc]`
         - After checking, create a handler class that will store commands.
           Your new handler must inherit from CommandsRouter. Like in this example:
