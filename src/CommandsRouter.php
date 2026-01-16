@@ -264,6 +264,7 @@ abstract class CommandsRouter
 				$cmd = $this->normalizeFuzzyString($command, true);
 				$matched = levenshtein($cmd, $text);
 				$maxLen = max(strlen($cmd), strlen($text));
+				if (empty($maxLen)) return false;
 				$percent = (1 - ($matched / $maxLen)) * 100;
 				return $percent >= $route->temperature;
 			});
