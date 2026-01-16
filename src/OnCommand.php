@@ -15,6 +15,7 @@ class OnCommand
 	 * @param bool $require_data # Whether data is required. If required but missing - mismatch.
 	 * @param string $separator # Data separator, space by default. For example "/ban user1 2day". Use "_" for "/ban_user1_2d"
 	 * @param int|float $temperature # Text matching threshold percentage. Disabled by default when (100%).
+	 * @param bool $fuzzy # Allow matching a command anywhere within the full text string.
 	 * @param bool $botName # Allow to check the bot's name from your getter to support direct requests to your bot at /start@TungTungBot
 	 * @param bool $isOwner # Whether creator privileges are required to execute the command.
 	 * @param bool $isAdmin # Whether admin privileges are required to execute the command.
@@ -26,6 +27,7 @@ class OnCommand
 		public bool      $require_data = false,
 		public string    $separator = " ",
 		public int|float $temperature = 100,
+		public bool      $fuzzy = false,
 		public bool      $botName = false,
 		public bool      $isOwner = false,
 		public bool      $isAdmin = false,
