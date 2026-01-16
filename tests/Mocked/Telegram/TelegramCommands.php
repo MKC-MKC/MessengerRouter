@@ -22,4 +22,10 @@ class TelegramCommands extends TelegramContract
 		$this->wasCalled = true; # Method matched and was called.
 	}
 
+	#[OnCommand(commands: ["detach and require", "отвязать и требовать"], return_data: true, require_data: true)]
+	public function detach(): void
+	{
+		$this->wasCalled = true; # Method matched and was called.
+	}
+
 }

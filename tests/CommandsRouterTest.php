@@ -46,4 +46,20 @@ class CommandsRouterTest extends TestCase
 		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
 	}
 
+	/**
+	 * Here present two commands:
+	 * 1. `detach and require`
+	 * 2. `отвязать и требовать`
+	 *
+	 * @return void
+	 */
+	public function testCommandWithRequiredData(): void
+	{
+		$this->update["message"]["text"] = "Detach and Require: 888";
+		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+
+		$this->update["message"]["text"] = "Отвязать и Требовать: 888";
+		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+	}
+
 }
