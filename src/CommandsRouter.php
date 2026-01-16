@@ -276,10 +276,7 @@ abstract class CommandsRouter
 			$text = $this->normalizeFuzzyString($text, true);
 			$matched = array_filter($route->commands, function ($command) use ($text, $route) {
 				$cmd = $this->normalizeFuzzyString($command, true);
-				$matched = levenshtein($cmd, $text);
-				$maxLen = max(strlen($cmd), strlen($text));
-				if (empty($maxLen)) return false;
-				$percent = (1 - ($matched / $maxLen)) * 100;
+				$percent = self::fuzzyMatch($cmd, $text, $route->fuzzy);
 
 				if ($this->commands_debug) {
 					error_log("... CHECK FOR \"$command\" => (" . round($percent, 3) . "% >= $route->temperature%)");
