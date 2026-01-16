@@ -45,11 +45,9 @@ composer require haikiri/messenger-routing
 ## Errors
 
 Please note, if no command has been found, you can catch this discrepancy and implement your behavior.
-By default, your controller will return true.
 This will not cause an exception if the command is not found. The code will continue to work.
 
 Обрати внимание, если ни одна команда не была найдена, ты можешь отловить это расхождение и реализовать своё поведение.
-По умолчанию ваш контроллер вернёт true.
 Это не вызовет исключение, если команда не найдена. Код продолжит работу.
 
 ```php
