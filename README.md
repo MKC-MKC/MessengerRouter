@@ -79,7 +79,7 @@ However, you can implement your own method for getting the list of admins in you
 
 # Usage
 
-> This is the most terrible instruction in the world, but, alas, I don't like it anymore than you do!
+> I recommend looking at the implementation example in the `tests/Mocked`.
 
 Structure:
 
