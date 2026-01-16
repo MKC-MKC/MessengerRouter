@@ -11,7 +11,7 @@ class OnCommand
 	public bool $returnData;
 	public bool $requireData;
 	public string $separator;
-	public int $temperature;
+	public int|float $temperature;
 	public bool $botName;
 	public bool $isOwner;
 	public bool $isAdmin;
@@ -22,7 +22,7 @@ class OnCommand
 	 * @param bool $return_data # Whether the function should return the command data.
 	 * @param bool $require_data # Whether data is required. If required but missing - mismatch.
 	 * @param string $separator # Data separator, space by default. For example "/ban user1 2day". Use "_" for "/ban_user1_2d"
-	 * @param int $temperature # Text matching threshold percentage. Disabled by default when (100%).
+	 * @param int|float $temperature # Text matching threshold percentage. Disabled by default when (100%).
 	 * @param bool $botName # Allow to check the bot's name from your getter to support direct requests to your bot at /start@TungTungBot
 	 * @param bool $isOwner # Whether creator privileges are required to execute the command.
 	 * @param bool $isAdmin # Whether admin privileges are required to execute the command.
@@ -33,7 +33,7 @@ class OnCommand
 		bool         $return_data = false,
 		bool         $require_data = false,
 		string       $separator = " ",
-		int          $temperature = 100,
+		int|float    $temperature = 100,
 		bool         $botName = false,
 		bool         $isOwner = false,
 		bool         $isAdmin = false,
