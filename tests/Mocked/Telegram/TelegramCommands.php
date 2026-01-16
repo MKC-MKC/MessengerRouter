@@ -13,6 +13,7 @@ class TelegramCommands extends TelegramContract
 
 	public function __construct()
 	{
+		$this->commands_debug = true;
 		parent::__construct($this);
 	}
 
