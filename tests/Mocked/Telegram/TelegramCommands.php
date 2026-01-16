@@ -9,7 +9,7 @@ use Tests\MessengerRouting\Mocked\Telegram\Contract\TelegramContract;
 
 class TelegramCommands extends TelegramContract
 {
-	public bool $wasCalled = false;
+	public mixed $wasCalled = null;
 
 	public function __construct()
 	{
@@ -20,13 +20,13 @@ class TelegramCommands extends TelegramContract
 	#[OnCommand(commands: ["thank you", "спасибо"])]
 	public function thanks(): void
 	{
-		$this->wasCalled = true; # Method matched and was called.
+		$this->wasCalled = __FUNCTION__; # Method matched and was called.
 	}
 
 	#[OnCommand(commands: ["detach and require", "отвязать и требовать"], return_data: true, require_data: true)]
 	public function detach(): void
 	{
-		$this->wasCalled = true; # Method matched and was called.
+		$this->wasCalled = __FUNCTION__; # Method matched and was called.
 	}
 
 }

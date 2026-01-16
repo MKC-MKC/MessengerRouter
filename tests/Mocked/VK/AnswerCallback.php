@@ -9,23 +9,24 @@ use Tests\MessengerRouting\Mocked\VK\Contract\VkContract;
 
 class AnswerCallback extends VkContract
 {
-	public bool $wasCalled = false;
+	public mixed $wasCalled = null;
 
 	public function __construct()
 	{
+		$this->commands_debug = true;
 		parent::__construct($this);
 	}
 
 	#[OnCommand(commands: ["answer_yes"])]
 	public function answer_yes(): void
 	{
-		$this->wasCalled = true; # Method matched and was called.
+		$this->wasCalled = __FUNCTION__; # Method matched and was called.
 	}
 
 	#[OnCommand(commands: ["answer_no"])]
 	public function answer_no(): void
 	{
-		$this->wasCalled = true; # Method matched and was called.
+		$this->wasCalled = __FUNCTION__; # Method matched and was called.
 	}
 
 }

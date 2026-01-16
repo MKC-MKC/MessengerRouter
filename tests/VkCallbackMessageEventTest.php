@@ -27,20 +27,20 @@ class VkCallbackMessageEventTest extends TestCase
 		],
 	];
 
-	private static function process($controller, $update): bool
+	private static function process($controller, $update)
 	{
 		$controller->update = $update;
 		$controller->__invoke();
-		return (bool)$controller->wasCalled;
+		return $controller->wasCalled;
 	}
 
 	public function testsForMessageEvent(): void
 	{
 		$this->update["object"]["payload"]["action"] = "answer_yes";
-		$this->assertTrue(self::process(new VK\AnswerCallback(), $this->update["object"]));
+		self::assertSame("answer_yes", self::process(new VK\AnswerCallback(), $this->update["object"]));
 
 		$this->update["object"]["payload"]["action"] = "answer_no";
-		$this->assertTrue(self::process(new VK\AnswerCallback(), $this->update["object"]));
+		self::assertSame("answer_no", self::process(new VK\AnswerCallback(), $this->update["object"]));
 	}
 
 }

@@ -30,20 +30,20 @@ class CommandsRouterTest extends TestCase
 		],
 	];
 
-	private static function process($controller, $update): bool
+	private static function process($controller, $update)
 	{
 		$controller->update = $update;
 		$controller->__invoke();
-		return (bool)$controller->wasCalled;
+		return $controller->wasCalled;
 	}
 
-	public function test_ThanksCommand(): void
+	public function test_ThanksCommand($expected = "thanks"): void
 	{
 		$this->update["message"]["text"] = "Thank You!";
-		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+		self::assertSame($expected, self::process(new Telegram\TelegramCommands(), $this->update));
 
 		$this->update["message"]["text"] = "Спасибо!";
-		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+		self::assertSame($expected, self::process(new Telegram\TelegramCommands(), $this->update));
 	}
 
 	/**
@@ -51,13 +51,13 @@ class CommandsRouterTest extends TestCase
 	 * 1. `detach and require`
 	 * 2. `отвязать и требовать`
 	 */
-	public function testCommandWithRequiredData(): void
+	public function testCommandWithRequiredData($expected = "detach"): void
 	{
 		$this->update["message"]["text"] = "Detach and Require: 888";
-		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+		self::assertSame($expected, self::process(new Telegram\TelegramCommands(), $this->update));
 
 		$this->update["message"]["text"] = "Отвязать и Требовать: 888";
-		$this->assertTrue(self::process(new Telegram\TelegramCommands(), $this->update));
+		self::assertSame($expected, self::process(new Telegram\TelegramCommands(), $this->update));
 	}
 
 }
