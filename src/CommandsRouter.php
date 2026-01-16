@@ -298,4 +298,36 @@ abstract class CommandsRouter
 		return false;
 	}
 
+	/**
+	 * Method to calculate fuzzy match percentage.
+	 *
+	 * @param string $command
+	 * @param string $source
+	 * @param bool $extended
+	 * @return float
+	 */
+	private static function fuzzyMatch(string $command, string $source, bool $extended): float
+	{
+		$commandLength = strlen($command);
+		$sourceLength = strlen($source);
+
+		if ($commandLength === 0 || $sourceLength === 0) return 0.0;
+
+		if (!$extended) {
+			$distance = levenshtein($command, $source);
+			$maxLen = max($commandLength, $sourceLength);
+			return (1 - ($distance / $maxLen)) * 100;
+		}
+
+		$percent = 0.0;
+		for ($i = 0; $i <= $sourceLength - $commandLength; $i++) {
+			$text = substr($source, $i, $commandLength);
+			$distance = levenshtein($command, $text);
+			$best = (1 - ($distance / $commandLength)) * 100;
+			if ($best > $percent) $percent = $best;
+		}
+
+		return $percent;
+	}
+
 }
