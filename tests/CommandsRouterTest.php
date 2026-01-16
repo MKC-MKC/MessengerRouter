@@ -50,8 +50,6 @@ class CommandsRouterTest extends TestCase
 	 * Here present two commands:
 	 * 1. `detach and require`
 	 * 2. `отвязать и требовать`
-	 *
-	 * @return void
 	 */
 	public function testCommandWithRequiredData(): void
 	{
