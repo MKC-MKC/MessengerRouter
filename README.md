@@ -156,7 +156,7 @@ abstract class TelegramContract implements \Haikiri\MessengerRouting\MessengerCo
 	 */
 	public function getUpdate(): object
 	{
-		return $this->bot->getUpdate();
+		return $this->bot->getUpdate(); # or $this->bot["update"]; // etc...
 	}
 
 	public function getBotName(): string
