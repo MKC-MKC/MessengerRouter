@@ -298,4 +298,8 @@ class PrivateRoom extends CommandsRouter
 Note that your bot accepts commands without special characters such as "/" by default.
 The short "/command" is equivalent to "command", and "!command" as a "command". etc...
 
+Small example.
+When you pass: `["ban", "бан"]`
+Can be triggered on: `ban`, `/ban`, `!ban`, `ban!`, `Ban!`, `Ban?`, `Ban!!!!!!`, `!BaN!` etc...
+
 Allow this in the settings inside [BotFather](https://t.me/BotFather).
