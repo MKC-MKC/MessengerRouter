@@ -8,8 +8,8 @@ use Attribute;
 class OnCommand
 {
 	public array $commands;
-	public bool $returnData;
-	public bool $requireData;
+	public bool $return_data;
+	public bool $require_data;
 	public string $separator;
 	public int|float $temperature;
 	public bool $botName;
@@ -41,8 +41,8 @@ class OnCommand
 	)
 	{
 		$this->commands = is_array($commands) ? $commands : [$commands];
-		$this->returnData = $return_data;
-		$this->requireData = $require_data;
+		$this->return_data = $return_data;
+		$this->require_data = $require_data;
 		$this->separator = $separator;
 		$this->temperature = $temperature;
 		$this->botName = $botName;

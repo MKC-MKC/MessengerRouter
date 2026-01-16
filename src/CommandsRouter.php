@@ -207,7 +207,7 @@ abstract class CommandsRouter
 			) continue;
 
 			# Check n trim the @NameOfBot.
-			if ($route->botName && !$route->returnData) {
+			if ($route->botName && !$route->return_data) {
 				$trimName = $this->checkBotName($text);
 				if ($trimName === false) return false;
 				if (is_string($trimName)) $text = $trimName;
@@ -227,13 +227,13 @@ abstract class CommandsRouter
 					if ($cmdParts !== array_slice($textParts, 0, count($cmdParts))) return null;
 
 					$params = array_slice($textParts, count($cmdParts));
-					return $route->requireData && empty($params) ? null : $params;
+					return $route->require_data && empty($params) ? null : $params;
 				}
 			);
 
 			if ($params !== null) {
-				if ($route->requireData && empty($params)) continue;
-				$this->data = $route->returnData ? array_merge([$text], $params) : null;
+				if ($route->require_data && empty($params)) continue;
+				$this->data = $route->return_data ? array_merge([$text], $params) : null;
 				$item["method"]->invokeArgs($controller, $this->data ? [$this->data] : []);
 				return true;
 			}
@@ -256,7 +256,7 @@ abstract class CommandsRouter
 			$route = $item["attribute"];
 
 			# If match temperature is 100% or data return is required - skip.
-			if ($route->temperature === 100 || $route->returnData || $route->requireData) continue;
+			if ($route->temperature === 100 || $route->return_data || $route->require_data) continue;
 
 			# Process command.
 			$text = $this->normalizeFuzzyString($text, true);
