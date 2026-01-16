@@ -38,6 +38,8 @@ composer require haikiri/messenger-routing
           `class MyMessengerCommands extends \Haikiri\MessengerRouting\CommandsRouter`
     - Make your commands based on the example below.
 
+> See examples in `tests/Mocked`.
+
 ---
 
 ## Errors
