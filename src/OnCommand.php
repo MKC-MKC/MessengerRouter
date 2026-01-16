@@ -8,14 +8,6 @@ use Attribute;
 class OnCommand
 {
 	public array $commands;
-	public bool $return_data;
-	public bool $require_data;
-	public string $separator;
-	public int|float $temperature;
-	public bool $botName;
-	public bool $isOwner;
-	public bool $isAdmin;
-	public bool $isEnvAdmin;
 
 	/**
 	 * @param array|string $commands # Command or array of commands: "/command1" or ["/command1", "command2"].
@@ -29,26 +21,18 @@ class OnCommand
 	 * @param bool $isEnvAdmin # Allow the execution of the command only on behalf of the creators of the boat listed in your getter.
 	 */
 	public function __construct(
-		array|string $commands,
-		bool         $return_data = false,
-		bool         $require_data = false,
-		string       $separator = " ",
-		int|float    $temperature = 100,
-		bool         $botName = false,
-		bool         $isOwner = false,
-		bool         $isAdmin = false,
-		bool         $isEnvAdmin = false,
+		array|string     $commands,
+		public bool      $return_data = false,
+		public bool      $require_data = false,
+		public string    $separator = " ",
+		public int|float $temperature = 100,
+		public bool      $botName = false,
+		public bool      $isOwner = false,
+		public bool      $isAdmin = false,
+		public bool      $isEnvAdmin = false,
 	)
 	{
 		$this->commands = is_array($commands) ? $commands : [$commands];
-		$this->return_data = $return_data;
-		$this->require_data = $require_data;
-		$this->separator = $separator;
-		$this->temperature = $temperature;
-		$this->botName = $botName;
-		$this->isOwner = $isOwner;
-		$this->isAdmin = $isAdmin;
-		$this->isEnvAdmin = $isEnvAdmin;
 	}
 
 }
