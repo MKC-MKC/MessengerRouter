@@ -11,6 +11,7 @@ abstract class CommandsRouter
 {
 	private ?array $attributes;
 	protected array|null $data = null;
+	public bool $commands_debug = false;
 	protected MessengerContractInterface $contractInterface;
 
 	/**
@@ -251,12 +252,25 @@ abstract class CommandsRouter
 	 */
 	private function fuzzyMatchDispatch(object $controller, string $text): bool
 	{
+		if ($this->commands_debug) error_log("\n\n>> INPUT COMMAND:\n\"$text\"\n");
+
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
+			$splitCommands = implode(", ", $route->commands);
+			if ($this->commands_debug) error_log(PHP_EOL . "> AVAILABLE COMMANDS:\n\"$splitCommands\"");
 
-			# If match temperature is 100% or data return is required - skip.
-			if ($route->temperature === 100 || $route->return_data || $route->require_data) continue;
+			# If match temperature is 100% - skip.
+			if (round($route->temperature) >= 100) {
+				if ($this->commands_debug) error_log(PHP_EOL . "<< SKIP: BECAUSE TEMPERATURE IS NOT SET\n\"$splitCommands\"\n");
+				continue;
+			}
+
+			# If data or return is required - skip.
+			if ($route->return_data || $route->require_data) {
+				if ($this->commands_debug) error_log(PHP_EOL . "<< SKIP: BECAUSE DATA OR DATA RETURN IS REQUIRED\n\"$splitCommands\"\n");
+				continue;
+			}
 
 			# Process command.
 			$text = $this->normalizeFuzzyString($text, true);
@@ -266,10 +280,16 @@ abstract class CommandsRouter
 				$maxLen = max(strlen($cmd), strlen($text));
 				if (empty($maxLen)) return false;
 				$percent = (1 - ($matched / $maxLen)) * 100;
+
+				if ($this->commands_debug) {
+					error_log("... CHECK FOR \"$command\" => (" . round($percent, 3) . "% >= $route->temperature%)");
+				}
+
 				return $percent >= $route->temperature;
 			});
 
 			if (!empty($matched)) {
+				if ($this->commands_debug) error_log(">> Matched commands: " . var_export($matched, true));
 				$item["method"]->invokeArgs($controller, []);
 				return true;
 			}
