@@ -257,7 +257,7 @@ abstract class CommandsRouter
 
 			# If match temperature is 100% - skip.
 			if (round($route->temperature) >= 100) {
-				if ($this->commands_debug) error_log(PHP_EOL . "<< SKIP: BECAUSE TEMPERATURE IS NOT SET\n\"$splitCommands\"\n");
+				if ($this->commands_debug) error_log("<< SKIP: BECAUSE TEMPERATURE IS NOT SET\n");
 				continue;
 			}
 
