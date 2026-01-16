@@ -143,7 +143,7 @@ abstract class CommandsRouter
 	private function canAccessByEnvAdmin(OnCommand $attribute): bool
 	{
 		if (!$attribute->isEnvAdmin) return true;
-		return $this->possibleCall("isSenderEnvAdmin");
+		return (bool)$this->possibleCall("isSenderEnvAdmin");
 	}
 
 	/**
