@@ -258,6 +258,7 @@ class PrivateRoom extends CommandsRouter
 		],
 		return_data: false, # temperature not worked if return_data is true.
 	    temperature: 60, # The threshold of a match.
+	    fuzzy: true, # If true, allows matching a command anywhere within the full text string. see tests!
 	)]
 	public function balance()
 	{
