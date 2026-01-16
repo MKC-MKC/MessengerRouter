@@ -125,8 +125,8 @@ abstract class CommandsRouter
 		if (!str_contains($text, "@")) return null;
 
 		$parts = explode("@", $text);
-		$commandBotName = strtolower(trim(end($parts)));
-		$envBotName = strtolower(trim($this->possibleCall("getBotName") ?? " "));
+		$commandBotName = mb_strtolower(trim(end($parts)));
+		$envBotName = mb_strtolower(trim($this->possibleCall("getBotName") ?? " "));
 
 		if ($commandBotName !== $envBotName) return false;
 
@@ -300,8 +300,8 @@ abstract class CommandsRouter
 	 */
 	private static function fuzzyMatch(string $command, string $source, bool $extended): float
 	{
-		$commandLength = strlen($command);
-		$sourceLength = strlen($source);
+		$commandLength = mb_strlen($command);
+		$sourceLength = mb_strlen($source);
 
 		if ($commandLength === 0 || $sourceLength === 0) return 0.0;
 
@@ -313,7 +313,7 @@ abstract class CommandsRouter
 
 		$percent = 0.0;
 		for ($i = 0; $i <= $sourceLength - $commandLength; $i++) {
-			$text = substr($source, $i, $commandLength);
+			$text = mb_substr($source, $i, $commandLength);
 			$distance = levenshtein($command, $text);
 			$best = (1 - ($distance / $commandLength)) * 100;
 			if ($best > $percent) $percent = $best;
