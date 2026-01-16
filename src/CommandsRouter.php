@@ -51,8 +51,8 @@ abstract class CommandsRouter
 	 */
 	protected function catch_all(): void
 	{
-		error_log(__FUNCTION__ . " - No one command found in your controller.");
-		error_log(__FUNCTION__ . " - Implement this method in your class to handle events when matches is differ.");
+		$from = $this->attributes[0]["method"]->class . "::" . __FUNCTION__;
+		error_log("[$from] - Implement this method in your command controller to handle events when no matches are found.");
 	}
 
 	/**
