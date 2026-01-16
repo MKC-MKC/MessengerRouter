@@ -32,7 +32,7 @@ abstract class CommandsRouter
 
 		$text = $this->possibleCall("getSenderCallbackQueryData", "getSenderText");
 		if (empty($text)) {
-			error_log("No one command source found in your interface.");
+			error_log("Empty command sources retrieved from your contract interface.");
 			$this->catch_all();
 			return;
 		}
