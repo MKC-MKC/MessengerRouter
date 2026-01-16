@@ -91,6 +91,8 @@ First, let's make your entrypoint. A Webhook will be configured on this page.
 
 `/src/Controller/ApiController.php`
 
+If you are use Symfony:
+
 ```php
 // This method accepts only POST requests from Telegram.
 #[Route(path: "/api/telegram/controller", name: "controller_post", methods: ["POST"])]
@@ -101,10 +103,58 @@ public function controller_post(): Response
 }
 ```
 
+## Symfony Controller Usage
+
+If you are use Symfony, try for use `Symfony Tags`... Something like this:
+
+```php
+	use Symfony\Contracts\Service\ServiceProviderInterface;
+
+	#[Route("/api/telegram/controller", name: "controller_post", methods: "POST")]
+	public function callback(
+		#[AutowireLocator(services: "tg", indexAttribute: "chat.type")]
+		ServiceProviderInterface $serviceProvider,
+	): Response
+	{
+		$update = $this->myMessenger->getResponse(); # get your update from messenger
+		$this->myMessenger->setUpdate($update); # write your update in your messenger SDK
+
+		try {
+			# Get your chat type.
+			$chatType = $update["type"] ?? null;
+
+			# Here searching for your service with the specified type of chat in `const CHAT_TYPE`
+			if ($chatType && $serviceProvider->has($chatType)) {
+				$serviceProvider->get($chatType)();
+			}
+		} catch (Throwable $ex) {
+			// Catch and handle all exception errors from your command controllers here.
+		}
+
+		return new Response("ok");
+	}
+
+```
+
 Now let's create a Telegram Messenger class that will process your Telegram requests.
 Connect your Telegram SDK in the constructor. Please, use your real library! This is just an example!
 
 `/src/Messenger/TelegramMessenger.php`
+
+If you are use Symfony:
+
+```php
+use Symfony\Component\DependencyInjection\Attribute;
+
+#[Attribute\AsTaggedItem(index: self::CHAT_TYPE)]
+#[Attribute\AutoconfigureTag("tg", ["chat.type" => self::CHAT_TYPE])]
+class TelegramMessenger extends TelegramContract
+{
+	const CHAT_TYPE = "message_new"; # This is the chat type that was assigned to your controller in your `update` of your messenger.
+}
+```
+
+If you are not use Symfony:
 
 ```php
 class TelegramMessenger extends TelegramContract
