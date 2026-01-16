@@ -135,7 +135,7 @@ abstract class CommandsRouter
 	}
 
 	/**
-	 * Method checks the id's of listed admins in your getter.
+	 * Only environment administrators can run these commands.
 	 * Только администраторы окружения смогут выполнять эти команды.
 	 *
 	 * @param OnCommand $attribute
@@ -148,8 +148,8 @@ abstract class CommandsRouter
 	}
 
 	/**
-	 * Method checks of the owner rights.
-	 * Только создатель чата или администратор окружения сможет выполнить эти команды.
+	 * Only the admin of env, and the chat creator can execute these commands.
+	 * Только администратор окружения и создатель чата, смогут выполнить эти команды.
 	 *
 	 * @param OnCommand $attribute
 	 * @return bool
@@ -161,8 +161,8 @@ abstract class CommandsRouter
 	}
 
 	/**
-	 * Method checks of the admin rights.
-	 * Только администратор окружения или чата, сможет выполнить эти команды.
+	 * Only the chat admin, env, and creator can execute these commands.
+	 * Только администратор или чата, окружения и создатель, смогут выполнить эти команды.
 	 *
 	 * @param OnCommand $attribute
 	 * @return bool
