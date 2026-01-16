@@ -75,6 +75,7 @@ Hierarchy of rights:
 This means that an admin cannot execute commands specific for the chat creator or environment administrator.  
 At the same time, the environment administrator can do everything that others cannot.  
 It expected that the list of admin’s IDs will be listed in your project's .ENV file as a string, separated by commas.
+However, you can implement your own method for getting the list of admins in your contract.
 
 > Please note that only the environment administrator is detected in private messages!
 
