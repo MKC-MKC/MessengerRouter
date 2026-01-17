@@ -3,10 +3,15 @@
     "description": "MessengerRouting – is a Command Router for messengers, like Telegram and Others. Php8 webhook command handler attributes.",
     "keywords": [
         "php",
+        "php8",
         "sdk",
         "bot",
         "routing",
-        "messenger"
+        "messenger",
+        "webhook",
+        "handler",
+        "handlers",
+        "attributes"
     ],
     "homepage": "https://github.com/MKC-MKC/MessengerRouter",
     "type": "library",
