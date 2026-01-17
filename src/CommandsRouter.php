@@ -37,6 +37,9 @@ abstract class CommandsRouter
 			return;
 		}
 
+		$adminAccess = $this->checkAdminAccess();
+		if ($adminAccess) return;
+
 		$exactResult = $this->exactMatchHandler($this, $text);
 		if ($exactResult) return;
 
@@ -183,6 +186,25 @@ abstract class CommandsRouter
 	}
 
 	/**
+	 * Check the admin access permission.
+	 *
+	 * @return bool
+	 */
+	private function checkAdminAccess(): bool
+	{
+		foreach ($this->attributes as $item) {
+			/** @var OnCommand $route */
+			$route = $item["attribute"];
+
+			if ($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) return true;
+			if ($route->isOwner && !$this->canAccessByOwner($route)) return true;
+			if ($route->isAdmin && !$this->canAccessByAdmin($route)) return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Process exact matches.
 	 *
 	 * @param object $controller
@@ -194,13 +216,6 @@ abstract class CommandsRouter
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
-
-			# Access rights check.
-			if (
-				($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) ||
-				($route->isOwner && !$this->canAccessByOwner($route)) ||
-				($route->isAdmin && !$this->canAccessByAdmin($route))
-			) continue;
 
 			# Check n trim the @NameOfBot.
 			if ($route->botName && !$route->return_data) {
