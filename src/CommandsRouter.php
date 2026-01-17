@@ -217,7 +217,7 @@ abstract class CommandsRouter
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
 
-			# Check n trim the @NameOfBot.
+			# Check and trim the @NameOfBot.
 			if ($route->botName && !$route->return_data) {
 				$trimName = $this->prepareBotName($text);
 				if ($trimName === false) return false;
