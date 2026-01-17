@@ -49,9 +49,6 @@ abstract class CommandsRouter
 		$this->catch_all();
 	}
 
-	/**
-	 * Implement this method in your class to handle events when matches is differ.
-	 */
 	protected function catch_all(): void
 	{
 		$from = $this->attributes[0]["method"]->class . "::" . __FUNCTION__;
