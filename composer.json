@@ -1,6 +1,6 @@
 {
     "name": "haikiri/messenger-routing",
-    "description": "MessengerRouting – is a Command Router for messengers, like Telegram and Others",
+    "description": "MessengerRouting – is a Command Router for messengers, like Telegram and Others. Php8 webhook command handler attributes.",
     "keywords": [
         "php",
         "sdk",
