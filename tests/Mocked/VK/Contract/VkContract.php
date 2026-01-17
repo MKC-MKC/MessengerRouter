@@ -42,6 +42,11 @@ class VkContract extends CommandsRouter implements MessengerContractInterface
 		return null; // TODO: Implement getSenderText() method.
 	}
 
+	public function isAppAuthorized(): bool
+	{
+		return false; // TODO: Implement isAppAuthorized() method.
+	}
+
 	/**
 	 * Алиас админов.
 	 * @return bool

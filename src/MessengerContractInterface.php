@@ -9,6 +9,8 @@ interface MessengerContractInterface
 
 	public function getSenderText(): ?string;
 
+	public function isAppAuthorized(): bool;
+
 	public function isSenderAdmin(): bool;
 
 	public function isSenderOwner(): bool;

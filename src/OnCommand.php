@@ -20,6 +20,7 @@ class OnCommand
 	 * @param bool $isOwner Whether creator privileges are required to execute the command.
 	 * @param bool $isAdmin Whether admin privileges are required to execute the command.
 	 * @param bool $isEnvAdmin Allow the execution of the command only on behalf of the creators of the boat listed in your getter.
+	 * @param bool $authorized Allow execution of the command only for users authorized by a custom auth tool.
 	 */
 	public function __construct(
 		array|string     $commands,
@@ -32,6 +33,7 @@ class OnCommand
 		public bool      $isOwner = false,
 		public bool      $isAdmin = false,
 		public bool      $isEnvAdmin = false,
+		public bool      $authorized = false,
 	)
 	{
 		$this->commands = is_array($commands) ? $commands : [$commands];

@@ -46,6 +46,11 @@ class TelegramContract extends CommandsRouter implements MessengerContractInterf
 		return $this->getUpdate()["message"]["text"];
 	}
 
+	public function isAppAuthorized(): bool
+	{
+		return false; // TODO: Implement isAppAuthorized() method.
+	}
+
 	/**
 	 * Admins. No access to `owner` and `env admin` commands.
 	 * Админы. Не имеет доступа к командам `owner` и `env admin`.

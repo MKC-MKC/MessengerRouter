@@ -215,6 +215,11 @@ abstract class TelegramContract implements \Haikiri\MessengerRouting\MessengerCo
 //		return $_ENV["TG_BOT_NAME"] ?? null; # or use data from your .ENV
 	}
 
+	public function isAppAuthorized(): bool
+	{
+		return false; // TODO: Implement isAppAuthorized() method.
+	}
+
 	public function isSenderAdmin(): bool
 	{
 		return false; // TODO: Implement verification for the chat administrator.

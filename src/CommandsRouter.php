@@ -40,6 +40,13 @@ abstract class CommandsRouter
 		$adminAccess = $this->checkAdminAccess();
 		if ($adminAccess) return;
 
+		# Custom business app-authorization check.
+		$customAuth = $this->checkCustomAppAuth();
+		if ($customAuth) {
+			$this->catch_unauthorized();
+			return;
+		}
+
 		$exactResult = $this->exactCommandHandler($this, $text);
 		if ($exactResult) return;
 
@@ -53,6 +60,12 @@ abstract class CommandsRouter
 	{
 		$from = $this->attributes[0]["method"]->class . "::" . __FUNCTION__;
 		error_log("[$from] - Implement this method in your command controller to handle events when no matches are found.");
+	}
+
+	protected function catch_unauthorized(): void
+	{
+		$from = $this->attributes[0]["method"]->class . "::" . __FUNCTION__;
+		error_log("[$from] - Implement this method in your command controller to handle cases where the user fails the `isAppAuthorized()` check.");
 	}
 
 	/**
@@ -135,6 +148,18 @@ abstract class CommandsRouter
 	}
 
 	/**
+	 * Only authorized clients of your business-application will be able to use these commands.
+	 * Только авторизованные клиенты вашего бизнес-приложения, смогут использовать эти команды.
+	 *
+	 * @param OnCommand $attribute
+	 * @return bool
+	 */
+	private function isCustomAppAuthorize(OnCommand $attribute): bool
+	{
+		return !$attribute->authorized || $this->possibleCall("isAppAuthorized");
+	}
+
+	/**
 	 * Only environment administrators can run these commands.
 	 * Только администраторы окружения смогут выполнять эти команды.
 	 *
@@ -196,6 +221,24 @@ abstract class CommandsRouter
 			if ($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) return true;
 			if ($route->isOwner && !$this->canAccessByOwner($route)) return true;
 			if ($route->isAdmin && !$this->canAccessByAdmin($route)) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * The method checks the user's authorization via your implementation of the `isAppAuthorized` method in the contract.
+	 * Метод проверяет авторизацию пользователя через вашу реализацию метода `isAppAuthorized` в контракте.
+	 *
+	 * @return bool
+	 */
+	private function checkCustomAppAuth(): bool
+	{
+		foreach ($this->attributes as $item) {
+			/** @var OnCommand $route */
+			$route = $item["attribute"];
+
+			if ($route->authorized && !$this->isCustomAppAuthorize($route)) return true;
 		}
 
 		return false;
