@@ -247,7 +247,7 @@ abstract class CommandsRouter
 	 */
 	private function fuzzyMatchHandler(object $controller, string $text): bool
 	{
-		if ($this->commands_debug) error_log("\n\n>> INPUT COMMAND:\n\"$text\"\n");
+		if ($this->commands_debug) error_log("\n" . str_repeat("=", 100) . "\n> INPUT COMMAND:\n\"$text\"\n");
 
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
