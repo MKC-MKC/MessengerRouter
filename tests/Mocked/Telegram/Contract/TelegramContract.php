@@ -80,11 +80,11 @@ class TelegramContract extends CommandsRouter implements MessengerContractInterf
 	/**
 	 * Handler of Keyboard or other Callback sources.
 	 * Обработчик Клавиатуры или прочей Callback чухни.
-	 * @return void
+	 * @return string|null
 	 */
-	public function getSenderCallbackQueryData()
+	public function getSenderCallbackQueryData(): string|null
 	{
-		// TODO: Implement getSenderCallbackQueryData() method.
+		return null; // TODO: Implement getSenderCallbackQueryData() method.
 	}
 
 }

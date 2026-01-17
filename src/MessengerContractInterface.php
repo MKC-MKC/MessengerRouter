@@ -15,6 +15,6 @@ interface MessengerContractInterface
 
 	public function isSenderEnvAdmin(): bool;
 
-	public function getSenderCallbackQueryData();
+	public function getSenderCallbackQueryData(): ?string;
 
 }

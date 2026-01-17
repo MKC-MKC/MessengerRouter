@@ -71,9 +71,9 @@ class VkContract extends CommandsRouter implements MessengerContractInterface
 
 	/**
 	 * Обработчик Клавиатуры или прочей Callback чухни.
-	 * @return void
+	 * @return string|null
 	 */
-	public function getSenderCallbackQueryData()
+	public function getSenderCallbackQueryData(): string|null
 	{
 		return $this->getUpdate()["payload"]["action"] ?? null;
 	}
