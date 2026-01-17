@@ -40,10 +40,10 @@ abstract class CommandsRouter
 		$adminAccess = $this->checkAdminAccess();
 		if ($adminAccess) return;
 
-		$exactResult = $this->exactMatchHandler($this, $text);
+		$exactResult = $this->exactCommandHandler($this, $text);
 		if ($exactResult) return;
 
-		$fuzzyResult = $this->fuzzyMatchHandler($this, $text);
+		$fuzzyResult = $this->fuzzyCommandHandler($this, $text);
 		if ($fuzzyResult) return;
 
 		$this->catch_all();
@@ -211,7 +211,7 @@ abstract class CommandsRouter
 	 * @param string $text
 	 * @return bool
 	 */
-	private function exactMatchHandler(object $controller, string $text): bool
+	private function exactCommandHandler(object $controller, string $text): bool
 	{
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
@@ -260,7 +260,7 @@ abstract class CommandsRouter
 	 * @param string $text
 	 * @return bool
 	 */
-	private function fuzzyMatchHandler(object $controller, string $text): bool
+	private function fuzzyCommandHandler(object $controller, string $text): bool
 	{
 		if ($this->commands_debug) error_log("\n" . str_repeat("=", 100) . "\n> INPUT COMMAND:\n\"$text\"\n");
 
