@@ -320,7 +320,7 @@ class PrivateRoom extends CommandsRouter
 		$this->messenger->bot->sendMessage(
 			chatId: $this->messenger->bot->getUpdate()->getChat()->getId(),
 			text:
-			"The built-in Levenshtein library allows small errors in the text." .
+			"The built-in `similar_text` function allows small errors in the text." .
 			"This method will work if there is a match for the specified temperature and above." . 
 			"Please note: that when using `temperature`, most likely, your team will not check the administrator rights.",
 		);

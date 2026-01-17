@@ -358,19 +358,17 @@ abstract class CommandsRouter
 		$commandLength = mb_strlen($command);
 		$sourceLength = mb_strlen($source);
 
-		if ($commandLength === 0 || $sourceLength === 0) return 0.0;
+		if (empty($command) || empty($source)) return 0.0;
 
-		if (!$extended) {
-			$distance = levenshtein($command, $source);
-			$maxLen = max($commandLength, $sourceLength);
-			return (1 - ($distance / $maxLen)) * 100;
+		if (!$extended || $commandLength > $sourceLength) {
+			similar_text($command, $source, $best);
+			return $best;
 		}
 
 		$percent = 0.0;
 		for ($i = 0; $i <= $sourceLength - $commandLength; $i++) {
-			$text = mb_substr($source, $i, $commandLength);
-			$distance = levenshtein($command, $text);
-			$best = (1 - ($distance / $commandLength)) * 100;
+			$part = mb_substr($source, $i, $commandLength);
+			similar_text($command, $part, $best);
 			if ($best > $percent) $percent = $best;
 		}
 
