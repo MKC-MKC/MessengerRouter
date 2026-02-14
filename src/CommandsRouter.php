@@ -30,20 +30,11 @@ abstract class CommandsRouter
 			return;
 		}
 
+		$this->data = null;
 		$text = $this->possibleCall("getSenderCallbackQueryData", "getSenderText");
 		if (empty($text)) {
 			error_log("Empty command sources retrieved from your contract interface.");
 			$this->catch_all();
-			return;
-		}
-
-		$adminAccess = $this->checkAdminAccess();
-		if ($adminAccess) return;
-
-		# Custom business app-authorization check.
-		$customAuth = $this->checkCustomAppAuth();
-		if ($customAuth) {
-			$this->catch_unauthorized();
 			return;
 		}
 
@@ -135,16 +126,14 @@ abstract class CommandsRouter
 	 */
 	private function prepareBotName(string $text): string|false|null
 	{
-		if (!str_contains($text, "@")) return null;
+		if (!preg_match("/^(\S+?)@([^\s@]+)(.*)$/u", $text, $matches)) return null;
 
-		$parts = explode("@", $text);
-		$commandBotName = mb_strtolower(trim(end($parts)));
+		$commandBotName = mb_strtolower(trim($matches[2]));
 		$envBotName = mb_strtolower(trim($this->possibleCall("getBotName") ?? " "));
 
 		if ($commandBotName !== $envBotName) return false;
 
-		array_pop($parts);
-		return trim(implode("@", $parts));
+		return trim($matches[1] . $matches[3]);
 	}
 
 	/**
@@ -156,7 +145,7 @@ abstract class CommandsRouter
 	 */
 	private function isCustomAppAuthorize(OnCommand $attribute): bool
 	{
-		return !$attribute->authorized || $this->possibleCall("isAppAuthorized");
+		return !$attribute->authorized || $this->possibleBoolCall("isAppAuthorized");
 	}
 
 	/**
@@ -168,7 +157,7 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByEnvAdmin(OnCommand $attribute): bool
 	{
-		return !$attribute->isEnvAdmin || $this->possibleCall("isSenderEnvAdmin");
+		return !$attribute->isEnvAdmin || $this->possibleBoolCall("isSenderEnvAdmin");
 	}
 
 	/**
@@ -180,7 +169,7 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByOwner(OnCommand $attribute): bool
 	{
-		return !$attribute->isOwner || $this->possibleCall("isSenderOwner", "isSenderEnvAdmin");
+		return !$attribute->isOwner || $this->possibleBoolCall("isSenderOwner", "isSenderEnvAdmin");
 	}
 
 	/**
@@ -192,7 +181,37 @@ abstract class CommandsRouter
 	 */
 	private function canAccessByAdmin(OnCommand $attribute): bool
 	{
-		return !$attribute->isAdmin || $this->possibleCall("isSenderAdmin", "isSenderOwner", "isSenderEnvAdmin");
+		return !$attribute->isAdmin || $this->possibleBoolCall("isSenderAdmin", "isSenderOwner", "isSenderEnvAdmin");
+	}
+
+	/**
+	 * Call first matching bool contract method with OR semantics.
+	 *
+	 * @param string ...$methods
+	 * @return bool
+	 */
+	private function possibleBoolCall(string ...$methods): bool
+	{
+		foreach ($methods as $method) {
+			if (!method_exists($this->contractInterface, $method)) continue;
+			if ($this->contractInterface->$method()) return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check command role access.
+	 *
+	 * @param OnCommand $attribute
+	 * @return bool
+	 */
+	private function hasAccessByRole(OnCommand $attribute): bool
+	{
+		return
+			$this->canAccessByEnvAdmin($attribute) &&
+			$this->canAccessByOwner($attribute) &&
+			$this->canAccessByAdmin($attribute);
 	}
 
 	/**
@@ -204,44 +223,15 @@ abstract class CommandsRouter
 	 */
 	private function normalizeSplit(string $text, string $separator): array
 	{
-		return array_filter(array_map(fn($part) => $this->normalizeFuzzyString($part), explode($separator, $text)), fn($part) => $part !== "");
-	}
-
-	/**
-	 * Check the admin access permission.
-	 *
-	 * @return bool
-	 */
-	private function checkAdminAccess(): bool
-	{
-		foreach ($this->attributes as $item) {
-			/** @var OnCommand $route */
-			$route = $item["attribute"];
-
-			if ($route->isEnvAdmin && !$this->canAccessByEnvAdmin($route)) return true;
-			if ($route->isOwner && !$this->canAccessByOwner($route)) return true;
-			if ($route->isAdmin && !$this->canAccessByAdmin($route)) return true;
+		if ($separator === "") {
+			$text = $this->normalizeFuzzyString($text);
+			return $text === "" ? [] : [$text];
 		}
 
-		return false;
-	}
-
-	/**
-	 * The method checks the user's authorization via your implementation of the `isAppAuthorized` method in the contract.
-	 * Метод проверяет авторизацию пользователя через вашу реализацию метода `isAppAuthorized` в контракте.
-	 *
-	 * @return bool
-	 */
-	private function checkCustomAppAuth(): bool
-	{
-		foreach ($this->attributes as $item) {
-			/** @var OnCommand $route */
-			$route = $item["attribute"];
-
-			if ($route->authorized && !$this->isCustomAppAuthorize($route)) return true;
-		}
-
-		return false;
+		return array_values(array_filter(
+			array_map(fn($part) => $this->normalizeFuzzyString($part), explode($separator, $text)),
+			fn($part) => $part !== ""
+		));
 	}
 
 	/**
@@ -256,16 +246,17 @@ abstract class CommandsRouter
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
 			$route = $item["attribute"];
+			$routeText = $text;
 
 			# Check and trim the @NameOfBot.
 			if ($route->botName && !$route->return_data) {
-				$trimName = $this->prepareBotName($text);
-				if ($trimName === false) return false;
-				if (is_string($trimName)) $text = $trimName;
+				$trimName = $this->prepareBotName($routeText);
+				if ($trimName === false) return true;
+				if (is_string($trimName)) $routeText = $trimName;
 			}
 
 			# Prepare text.
-			$textParts = $this->normalizeSplit($text, $route->separator);
+			$textParts = $this->normalizeSplit($routeText, $route->separator);
 
 			# Process command.
 			$params = array_reduce(
@@ -284,7 +275,17 @@ abstract class CommandsRouter
 
 			if ($params !== null) {
 				if ($route->require_data && empty($params)) continue;
-				$this->data = $route->return_data ? array_merge([$text], $params) : null;
+
+				# Skip inaccessible commands and continue to next available command.
+				if (!$this->hasAccessByRole($route)) continue;
+
+				# Stop and trigger unauthorized callback for matched protected commands.
+				if (!$this->isCustomAppAuthorize($route)) {
+					$this->catch_unauthorized();
+					return true;
+				}
+
+				$this->data = $route->return_data ? array_merge([$routeText], $params) : null;
 				$item["method"]->invokeArgs($controller, $this->data ? [$this->data] : []);
 				return true;
 			}
@@ -303,6 +304,7 @@ abstract class CommandsRouter
 	private function fuzzyCommandHandler(object $controller, string $text): bool
 	{
 		if ($this->commands_debug) error_log("\n" . str_repeat("=", 100) . "\n> INPUT COMMAND:\n\"$text\"\n");
+		$text = $this->normalizeFuzzyString($text, true);
 
 		foreach ($this->attributes as $item) {
 			/** @var OnCommand $route */
@@ -323,7 +325,6 @@ abstract class CommandsRouter
 			}
 
 			# Process command.
-			$text = $this->normalizeFuzzyString($text, true);
 			$matched = array_filter($route->commands, function ($command) use ($text, $route) {
 				$cmd = $this->normalizeFuzzyString($command, true);
 				$percent = self::fuzzyMatch($cmd, $text, $route->fuzzy);
@@ -336,6 +337,12 @@ abstract class CommandsRouter
 			});
 
 			if (!empty($matched)) {
+				if (!$this->hasAccessByRole($route)) continue;
+				if (!$this->isCustomAppAuthorize($route)) {
+					$this->catch_unauthorized();
+					return true;
+				}
+
 				if ($this->commands_debug) error_log(">> Matched commands: " . var_export($matched, true));
 				$item["method"]->invokeArgs($controller, []);
 				return true;
@@ -361,18 +368,115 @@ abstract class CommandsRouter
 		if (empty($command) || empty($source)) return 0.0;
 
 		if (!$extended || $commandLength > $sourceLength) {
-			similar_text($command, $source, $best);
-			return $best;
+			return self::similarPercent($command, $source);
 		}
 
 		$percent = 0.0;
 		for ($i = 0; $i <= $sourceLength - $commandLength; $i++) {
 			$part = mb_substr($source, $i, $commandLength);
-			similar_text($command, $part, $best);
+			$best = self::similarPercent($command, $part);
 			if ($best > $percent) $percent = $best;
 		}
 
 		return $percent;
+	}
+
+	/**
+	 * Calculate similarity percent for ascii and utf-8 strings.
+	 *
+	 * @param string $command
+	 * @param string $source
+	 * @return float
+	 */
+	private static function similarPercent(string $command, string $source): float
+	{
+		if (self::isAscii($command) && self::isAscii($source)) {
+			similar_text($command, $source, $percent);
+			return $percent;
+		}
+
+		$dictionary = [];
+		$nextCode = 1;
+		$commandEncoded = self::encodeUtf8ToSingleByte($command, $dictionary, $nextCode);
+		$sourceEncoded = self::encodeUtf8ToSingleByte($source, $dictionary, $nextCode);
+
+		if ($commandEncoded === null || $sourceEncoded === null) {
+			return self::lcsSimilarityPercent($command, $source);
+		}
+
+		similar_text($commandEncoded, $sourceEncoded, $percent);
+		return $percent;
+	}
+
+	/**
+	 * Check if a string has only ascii symbols.
+	 *
+	 * @param string $value
+	 * @return bool
+	 */
+	private static function isAscii(string $value): bool
+	{
+		return preg_match("/[^\x00-\x7F]/", $value) !== 1;
+	}
+
+	/**
+	 * Encode utf-8 string into single-byte alphabet for safe similar_text compare.
+	 *
+	 * @param string $value
+	 * @param array $dictionary
+	 * @param int $nextCode
+	 * @return string|null
+	 */
+	private static function encodeUtf8ToSingleByte(string $value, array &$dictionary, int &$nextCode): ?string
+	{
+		$chars = preg_split("//u", $value, -1, PREG_SPLIT_NO_EMPTY);
+		if ($chars === false) return null;
+
+		$result = "";
+		foreach ($chars as $char) {
+			if (!isset($dictionary[$char])) {
+				if ($nextCode > 255) return null;
+				$dictionary[$char] = chr($nextCode);
+				$nextCode++;
+			}
+
+			$result .= $dictionary[$char];
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Unicode similarity based on LCS.
+	 *
+	 * @param string $command
+	 * @param string $source
+	 * @return float
+	 */
+	private static function lcsSimilarityPercent(string $command, string $source): float
+	{
+		$left = preg_split("//u", $command, -1, PREG_SPLIT_NO_EMPTY);
+		$right = preg_split("//u", $source, -1, PREG_SPLIT_NO_EMPTY);
+		if (empty($left) || empty($right)) return 0.0;
+
+		$rightLength = count($right);
+		$previous = array_fill(0, $rightLength + 1, 0);
+
+		foreach ($left as $leftChar) {
+			$current = [0];
+			for ($j = 1; $j <= $rightLength; $j++) {
+				if ($leftChar === $right[$j - 1]) {
+					$current[$j] = $previous[$j - 1] + 1;
+				} else {
+					$current[$j] = max($current[$j - 1], $previous[$j]);
+				}
+			}
+
+			$previous = $current;
+		}
+
+		$lcsLength = $previous[$rightLength];
+		return (2 * $lcsLength / (count($left) + $rightLength)) * 100;
 	}
 
 }
