@@ -32,6 +32,12 @@ class RegressionCommands extends RegressionContract
 		$this->wasCalled = __FUNCTION__; # Method matched and was called.
 	}
 
+	#[OnCommand(commands: "show balance", strict: true)]
+	public function strict_show_balance(): void
+	{
+		$this->wasCalled = __FUNCTION__; # Method matched and was called.
+	}
+
 	#[OnCommand(commands: "admin ping", isAdmin: true)]
 	public function admin_ping(): void
 	{

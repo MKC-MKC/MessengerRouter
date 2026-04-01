@@ -28,6 +28,21 @@ class CommandsRouterRegressionTest extends TestCase
 		self::assertSame("public_ping", self::process($controller, "public ping"));
 	}
 
+	public function testDefaultExactCommandShouldStillAllowTrailingText(): void
+	{
+		$controller = new RegressionCommands();
+		self::assertSame("public_ping", self::process($controller, "public ping extra text"));
+	}
+
+	public function testStrictExactCommandShouldMatchOnlyWithoutTrailingText(): void
+	{
+		$strictMatchController = new RegressionCommands();
+		self::assertSame("strict_show_balance", self::process($strictMatchController, "!show balance"));
+
+		$strictMismatchController = new RegressionCommands();
+		self::assertSame("catch_all", self::process($strictMismatchController, "!show balance for me"));
+	}
+
 	public function testUnauthorizedShouldBeTriggeredOnlyForMatchedProtectedCommand(): void
 	{
 		$publicController = new RegressionCommands();

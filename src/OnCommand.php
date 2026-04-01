@@ -13,6 +13,7 @@ class OnCommand
 	 * @param array|string $commands Command or array of commands: "/command1" or ["/command1", "command2"].
 	 * @param bool $return_data Whether the function should return the command data.
 	 * @param bool $require_data Whether data is required. If required but missing - mismatch.
+	 * @param bool $strict Require a full exact match without trailing command data after normalization.
 	 * @param string $separator Data separator, space by default. For example "/ban user1 2day". Use "_" for "/ban_user1_2d"
 	 * @param int|float $temperature Text matching threshold percentage. Disabled by default when (100%).
 	 * @param bool $fuzzy Allow matching a command anywhere within the full text string.
@@ -26,6 +27,7 @@ class OnCommand
 		array|string     $commands,
 		public bool      $return_data = false,
 		public bool      $require_data = false,
+		public bool      $strict = false,
 		public string    $separator = " ",
 		public int|float $temperature = 100,
 		public bool      $fuzzy = false,

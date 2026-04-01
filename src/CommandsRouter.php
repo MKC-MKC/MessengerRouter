@@ -235,6 +235,22 @@ abstract class CommandsRouter
 	}
 
 	/**
+	 * Check whether the exact match should be accepted for the current route mode.
+	 *
+	 * @param OnCommand $route
+	 * @param array $params
+	 * @return bool
+	 */
+	private function isExactMatchAccepted(OnCommand $route, array $params): bool
+	{
+		if ($route->strict && !empty($params)) return false;
+
+		if ($route->require_data && empty($params)) return false;
+
+		return true;
+	}
+
+	/**
 	 * Process exact matches.
 	 *
 	 * @param object $controller
@@ -269,13 +285,11 @@ abstract class CommandsRouter
 					if ($cmdParts !== array_slice($textParts, 0, count($cmdParts))) return null;
 
 					$params = array_slice($textParts, count($cmdParts));
-					return $route->require_data && empty($params) ? null : $params;
+					return $this->isExactMatchAccepted($route, $params) ? $params : null;
 				}
 			);
 
 			if ($params !== null) {
-				if ($route->require_data && empty($params)) continue;
-
 				# Skip inaccessible commands and continue to next available command.
 				if (!$this->hasAccessByRole($route)) continue;
 
